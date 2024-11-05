@@ -69,16 +69,6 @@ parser.add_argument('--sigma',default=5.,type=float)
 args = parser.parse_args()
 if args.dataset == "Synapse":
     args.root_path = os.path.join(args.root_path, "train_npz")
-
-def _cfg(url='', **kwargs):
-    return {
-        'url': url,
-        'num_classes': 1000, 'input_size': (1, 224, 224), 'pool_size': None,
-        'crop_pct': .95, 'interpolation': 'bicubic',
-        'mean': IMAGENET_DEFAULT_MEAN, 'std': IMAGENET_DEFAULT_STD,
-        'classifier': 'head',
-        **kwargs
-    }
     
 def load_from(model, ckpt_path):
     pretrained_path = ckpt_path
@@ -156,7 +146,7 @@ if __name__ == "__main__":
         drop_path_rate=0.1,
         num_classes=9,
         fork_feat=True).cuda()
-    net.default_cfg = _cfg(crop_pct=0.9)
+    
     net = load_from(net, 'eformer_l_450.pth')
 
 

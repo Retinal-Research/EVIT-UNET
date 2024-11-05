@@ -29,7 +29,7 @@ def _cfg(url='', **kwargs):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--volume_path', type=str,
-                    default='/scratch/xinli38/data/Synapse', help='root dir for validation volume data')  # for acdc volume_path=root_dir
+                    default='data/Synapse', help='root dir for validation volume data')  # for acdc volume_path=root_dir
 parser.add_argument('--dataset', type=str,
                     default='Synapse', help='experiment_name')
 parser.add_argument('--num_classes', type=int,
@@ -145,17 +145,16 @@ if __name__ == "__main__":
 
     # net = ViT_seg(config, img_size=args.img_size, num_classes=args.num_classes).cuda()
     # net =  UNet_hd(n_channels=1, n_classes=args.num_classes, bilinear=True).cuda()
+    from unet import Eff_Unet
     net = Eff_Unet(
-        layers=EfficientFormer_depth['L'],
-        embed_dims=EfficientFormer_width['L'],
+        layers=[5, 5, 15, 10],
+        embed_dims=[40, 80, 192, 384],
         downsamples=[True, True, True, True],
         vit_num=6,
         drop_path_rate=0.1,
-        e_ratios=expansion_ratios_L,
         num_classes=9,
         fork_feat=True).cuda()
-    net.default_cfg = _cfg(crop_pct=0.9)
-    
+        
     # for epoch in reversed(range(81,150)):
     for epoch in [85]:
         # if (epoch+1)%2!=0:
@@ -164,7 +163,7 @@ if __name__ == "__main__":
         snapshot_name = snapshot.split('/')[-1]
         # log_folder = f'./test_log/test_log_{args.output_dir}'
         case_name = args.output_dir.split('/')[-1]
-        log_folder = f'/scratch/xinli38/SelfReg-UNet-main/src/train_synase/test_result/best_epoch_{case_name}'
+        log_folder = f'test_result/best_epoch_{case_name}'
         os.makedirs(log_folder, exist_ok=True)
         logging.basicConfig(filename=log_folder + '/'+snapshot_name+".txt", level=logging.INFO, format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%H:%M:%S')
         logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
