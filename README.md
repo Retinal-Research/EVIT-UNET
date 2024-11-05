@@ -53,7 +53,9 @@ python train_unetKD.py --root_path /data/Synapse --output_dir ./results --batch_
 python test_unet.py
 ```
 
+### Visualization
 
+<img src="images/vis.png" style="zoom:22%;" />
 
 ### Thanks for the code provided by:
 
