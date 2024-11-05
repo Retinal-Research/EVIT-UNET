@@ -64,3 +64,4 @@ python test_unet.py
 **Swin-Unet** https://github.com/HuCaoFighting/Swin-Unet
 
 **SelfReg-UNet** https://github.com/ChongQingNoSubway/SelfReg-UNet
+**UCTransNet** https://github.com/McGregorWwww/UCTransNet/blob/main/nets/UCTransNet.py
