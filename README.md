@@ -38,6 +38,12 @@ Synapse dataset is used in our paper. [Download](https://paperswithcode.com/sota
 
 
 
+### Weight Download
+
+The model weight can be downloaded from [Here](https://drive.google.com/file/d/1IBkqR5pZRFGPUEWU0T0-VHHHF7Y6SaEH/view?usp=share_link)
+
+
+
 ### Train
 
 * Set your own parameters, and start the train process, eg.:
