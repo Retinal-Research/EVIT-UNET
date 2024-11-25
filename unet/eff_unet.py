@@ -687,7 +687,7 @@ class Eff_Unet(nn.Module):
 
         self.num_classes = num_classes
         self.fork_feat = fork_feat
-        self.patch_embed = stem(3, embed_dims[0], act_layer=act_layer)
+        self.patch_embed = stem(1, embed_dims[0], act_layer=act_layer)
         self.up = merge(embed_dims[0],embed_dims[0], act_layer=act_layer)
         self.output = nn.Conv2d(in_channels=embed_dims[0],out_channels=self.num_classes,kernel_size=1,bias=False)
     
