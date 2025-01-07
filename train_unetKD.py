@@ -144,8 +144,7 @@ if __name__ == "__main__":
         downsamples=[True, True, True, True],
         vit_num=6,
         drop_path_rate=0.1,
-        num_classes=9,
-        fork_feat=True).cuda()
+        num_classes=9).cuda()
     
     net = load_from(net, 'eformer_l_450.pth')
 

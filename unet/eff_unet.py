@@ -675,7 +675,6 @@ class Eff_Unet(nn.Module):
                  down_patch_size=3, down_stride=2, down_pad=1,
                  drop_rate=0., drop_path_rate=0.,
                  use_layer_scale=True, layer_scale_init_value=1e-5,
-                 fork_feat=False,
                  init_cfg=None,
                  pretrained=None,
                  vit_num=0,
@@ -686,7 +685,6 @@ class Eff_Unet(nn.Module):
         super().__init__()
 
         self.num_classes = num_classes
-        self.fork_feat = fork_feat
         self.patch_embed = stem(1, embed_dims[0], act_layer=act_layer)
         self.up = merge(embed_dims[0],embed_dims[0], act_layer=act_layer)
         self.output = nn.Conv2d(in_channels=embed_dims[0],out_channels=self.num_classes,kernel_size=1,bias=False)
@@ -784,23 +782,15 @@ class Eff_Unet(nn.Module):
             self.concat_back_dim.append(skip_down_conv)
 
 
-        if self.fork_feat:
-            self.out_indices = [0, 2, 4, 6]
-            for i_emb, i_layer in enumerate(self.out_indices):
-                if i_emb == 0 and os.environ.get('FORK_LAST3', None):
-                    layer = nn.Identity()
-                else:
-                    layer = norm_layer(embed_dims[i_emb])
-                layer_name = f'norm{i_layer}'
-                self.add_module(layer_name, layer)
-        else:
-            self.norm = norm_layer(embed_dims[-1])
-            
-            self.head = nn.Conv2d(embed_dims[-1], num_classes, kernel_size=1) if num_classes > 0 else nn.Identity()
+        self.out_indices = [0, 2, 4, 6]
+        for i_emb, i_layer in enumerate(self.out_indices):
+            if i_emb == 0 and os.environ.get('FORK_LAST3', None):
+                layer = nn.Identity()
+            else:
+                layer = norm_layer(embed_dims[i_emb])
+            layer_name = f'norm{i_layer}'
+            self.add_module(layer_name, layer)
 
-            self.dist = distillation
-            if self.dist:
-                self.dist_head = nn.Conv2d(embed_dims[-1], num_classes, kernel_size=1) if num_classes > 0 else nn.Identity()
 
 
 
@@ -818,7 +808,7 @@ class Eff_Unet(nn.Module):
         outs = []
         for idx, block in enumerate(self.network_down_layers):
             x = block(x)
-            if self.fork_feat and idx in self.out_indices:
+            if idx in self.out_indices:
 
                 norm_layer = getattr(self, f'norm{idx}')
                 x_out = norm_layer(x)
@@ -882,9 +872,7 @@ def load_from(model, ckpt_path):
         pretrained_dict = torch.load(pretrained_path, map_location=device)
 
         pretrained_dict = pretrained_dict['model']
-        print("---start load pretrained modle encoder---")
-        model_dict = model.state_dict()
-        
+        model_dict = model.state_dict()                
         full_dict = copy.deepcopy(pretrained_dict)
         for k, v in pretrained_dict.items():
             if "network." in k:
@@ -901,6 +889,7 @@ def load_from(model, ckpt_path):
 
 
         msg = model.load_state_dict(full_dict, strict=False)
+        print("pretrained weights are loaded")
         return model
     else:
         print("none pretrain")
