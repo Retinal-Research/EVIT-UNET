@@ -40,7 +40,7 @@ Synapse dataset is used in our paper. [Download](https://paperswithcode.com/sota
 
 ### Weight Download
 
-The model weight can be downloaded from [Here](https://drive.google.com/file/d/1IBkqR5pZRFGPUEWU0T0-VHHHF7Y6SaEH/view?usp=share_link)
+The model weight can be downloaded from [Here](https://www.dropbox.com/scl/fo/knrejgftk3e3b38j8jq2m/AL7EdEIeg3yf8ZzJIut652I?rlkey=q8m55rllkjwfqw17tx6ebhc4q&e=1&st=6v81yprr&dl=0)
 
 
 
